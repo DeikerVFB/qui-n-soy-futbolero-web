@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¿Quién Soy? — Edición Futbolera</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --card: #111827;
+      --card-border: #1f2937;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --mystery: #f59e0b;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #132238 0%, var(--bg) 65%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px 14px 48px;
+      display: flex;
+      justify-content: center;
+    }
+    .container { width: 100%; max-width: 540px; }
+    header { text-align: center; margin-bottom: 22px; }
+    header h1 { margin: 0; font-size: 1.65rem; letter-spacing: -0.5px; }
+    header p { margin: 6px 0 0; color: var(--muted); font-size: 0.92rem; }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+    h2 { margin: 0 0 12px; font-size: 1.05rem; color: #e5e7eb; }
+    .row { display: flex; gap: 8px; margin-bottom: 10px; }
+    input[type="text"], textarea {
+      width: 100%;
+      background: #090d16;
+      border: 1px solid #374151;
+      color: var(--text);
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    input[type="text"]:focus, textarea:focus { border-color: var(--accent); }
+    button {
+      background: var(--accent);
+      color: #032218;
+      border: none;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.08s ease, background 0.15s ease;
+    }
+    button:hover { background: var(--accent-hover); }
+    button:active { transform: scale(0.98); }
+    button.secondary {
+      background: #1f2937;
+      color: var(--text);
+      border: 1px solid #374151;
+    }
+    button.secondary:hover { background: #374151; }
+    button.danger { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .chip {
+      background: #1f2937;
+      border: 1px solid #374151;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chip span.del { color: #f87171; cursor: pointer; font-weight: bold; }
+    .packs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .pack-item {
+      background: #090d16;
+      border: 1px solid #283244;
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+    .pack-item input { accent-color: var(--accent); width: 16px; height: 16px; }
+    .link-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #090d16;
+      border: 1px solid #283244;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+    .link-card strong { font-size: 0.98rem; }
+    /* Vista de Jugador */
+    .my-card {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(17, 24, 39, 0.95));
+      border: 2px dashed var(--mystery);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .my-card .badge {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fcd34d;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .my-card .mystery-name { font-size: 1.5rem; font-weight: 800; color: #fde68a; margin: 4px 0; }
+    .friend-card {
+      background: #090d16;
+      border: 1px solid #263145;
+      border-radius: 12px;
+      padding: 13px 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .friend-name { font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .assigned-player { font-size: 1.12rem; font-weight: 700; color: #fff; margin-top: 2px; }
+    .tag-cat {
+      font-size: 0.75rem;
+      background: #1f2937;
+      color: #93c5fd;
+      padding: 4px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .checklist { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .clue-btn {
+      background: #090d16;
+      border: 1px solid #374151;
+      color: var(--muted);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .clue-btn.yes { background: rgba(16, 185, 129, 0.2); border-color: var(--accent); color: #6ee7b7; }
+    .clue-btn.no { background: rgba(239, 68, 68, 0.15); border-color: var(--danger); color: #fca5a5; text-decoration: line-through; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>⚽ ¿Quién Soy? Futbolero</h1>
+      <p>Modo llamada · Nadie ve su propio jugador</p>
+    </header>
+
+    <!-- VISTA 1: ANFITRIÓN -->
+    <div id="hostView">
+      <div class="panel">
+        <h2>1. ¿Quiénes están en la llamada?</h2>
+        <div class="row">
+          <input type="text" id="playerInput" placeholder="Ej: Deiker, Carlos, Luis..." maxlength="22" />
+          <button onclick="addParticipant()">Añadir</button>
+        </div>
+        <div class="chips" id="participantsList"></div>
+      </div>
+
+      <div class="panel">
+        <h2>2. Mazos de futbolistas</h2>
+        <div class="packs">
+          <label class="pack-item"><input type="checkbox" value="actuales" checked /> Estrellas actuales</label>
+          <label class="pack-item"><input type="checkbox" value="leyendas" checked /> Leyendas e ídolos</label>
+          <label class="pack-item"><input type="checkbox" value="sudamerica" checked /> Sudamérica / Vinotinto</label>
+          <label class="pack-item"><input type="checkbox" value="troll" checked /> Cartas Troll / Random</label>
+        </div>
+        <div style="margin-top: 12px;">
+          <input type="text" id="customPool" placeholder="Opcional: añade jugadores extra separados por coma" />
+        </div>
+      </div>
+
+      <button style="width: 100%; padding: 14px; font-size: 1rem;" onclick="generateGame()">
+        🎲 Sortear y Generar Enlaces Secretos
+      </button>
+
+      <div id="linksPanel" class="panel hidden" style="margin-top: 16px;">
+        <h2>3. Enlaces listos (el sorteo es secreto)</h2>
+        <p style="font-size: 0.85rem; color: var(--muted); margin-top: -6px;">
+          Pasa cada link a su dueño por el chat o WhatsApp. Abre el tuyo para empezar.
+        </p>
+        <div id="linksContainer"></div>
+      </div>
+    </div>
+
+    <!-- VISTA 2: JUGADOR EN PARTIDA -->
+    <div id="gameView" class="hidden">
+      <div class="my-card">
+        <div class="badge" id="viewerBadge">Turno de ...</div>
+        <div class="mystery-name" id="mySecretBox">❓ TÚ (Adivina quién eres)</div>
+        <p style="margin: 6px 0 0; font-size: 0.85rem; color: var(--muted);">
+          Haz preguntas de Sí/No en la llamada para descubrirte
+        </p>
+      </div>
+
+      <div class="panel">
+        <h2>👀 Jugadores de tus amigos</h2>
+        <div id="friendsContainer"></div>
+      </div>
+
+      <div class="panel">
+        <h2>📝 Bloc de pistas rápido (toca para marcar Sí / No)</h2>
+        <div class="checklist" id="clueTags"></div>
+        <textarea id="notesBox" rows="2" placeholder="Anota aquí pistas (ej: jugó en Premier, zurdo, ganó Champions...)"></textarea>
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="secondary" style="flex: 1;" onclick="revealSelf()">👁️ Revelar mi jugador</button>
+        <button class="danger" onclick="newLobby()">Nueva sala</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DB = {
+      actuales: [
+        { n: "Kylian Mbappé", c: "Actual" }, { n: "Vinícius Jr.", c: "Actual" },
+        { n: "Erling Haaland", c: "Actual" }, { n: "Jude Bellingham", c: "Actual" },
+        { n: "Lamine Yamal", c: "Actual" }, { n: "Rodri Hernández", c: "Actual" },
+        { n: "Federico Valverde", c: "Actual" }, { n: "Lautaro Martínez", c: "Actual" },
+        { n: "Mohamed Salah", c: "Actual" }, { n: "Cole Palmer", c: "Actual" },
+        { n: "Florian Wirtz", c: "Actual" }, { n: "Jamal Musiala", c: "Actual" },
+        { n: "Julián Álvarez", c: "Actual" }, { n: "Thibaut Courtois", c: "Actual" },
+        { n: "Virgil van Dijk", c: "Actual" }, { n: "Antoine Griezmann", c: "Actual" },
+        { n: "Pedri", c: "Actual" }, { n: "Raphinha", c: "Actual" },
+        { n: "Harry Kane", c: "Actual" }, { n: "Kevin De Bruyne", c: "Actual" }
+      ],
+      leyendas: [
+        { n: "Lionel Messi", c: "Leyenda" }, { n: "Cristiano Ronaldo", c: "Leyenda" },
+        { n: "Neymar Jr.", c: "Leyenda" }, { n: "Ronaldinho", c: "Leyenda" },
+        { n: "Zinedine Zidane", c: "Leyenda" }, { n: "Ronaldo Nazário", c: "Leyenda" },
+        { n: "Andrés Iniesta", c: "Leyenda" }, { n: "Xavi Hernández", c: "Leyenda" },
+        { n: "Sergio Ramos", c: "Leyenda" }, { n: "Luka Modrić", c: "Leyenda" },
+        { n: "Toni Kroos", c: "Leyenda" }, { n: "Luis Suárez", c: "Leyenda" },
+        { n: "Zlatan Ibrahimović", c: "Leyenda" }, { n: "Kaká", c: "Leyenda" },
+        { n: "Gianluigi Buffon", c: "Leyenda" }, { n: "Roberto Carlos", c: "Leyenda" },
+        { n: "Thierry Henry", c: "Leyenda" }, { n: "Karim Benzema", c: "Leyenda" }
+      ],
+      sudamerica: [
+        { n: "Salomón Rondón", c: "Vinotinto" }, { n: "Yeferson Soteldo", c: "Vinotinto" },
+        { n: "Juan Arango", c: "Leyenda VEN" }, { n: "Josef Martínez", c: "Vinotinto" },
+        { n: "Tomás Rincón", c: "Vinotinto" }, { n: "Jefferson Savarino", c: "Vinotinto" },
+        { n: "Rafael Romo", c: "Vinotinto" }, { n: "Jon Aramburu", c: "Vinotinto" },
+        { n: "James Rodríguez", c: "Sudamérica" }, { n: "Luis Díaz", c: "Sudamérica" },
+        { n: "Darwin Núñez", c: "Sudamérica" }, { n: "Dibu Martínez", c: "Sudamérica" },
+        { n: "Rodrigo De Paul", c: "Sudamérica" }, { n: "Endrick", c: "Sudamérica" },
+        { n: "Alexis Sánchez", c: "Sudamérica" }, { n: "Arturo Vidal", c: "Sudamérica" }
+      ],
+      troll: [
+        { n: "Antony (El Spinner)", c: "🤡 Troll" }, { n: "Harry Maguire", c: "🤡 Troll" },
+        { n: "Mykhailo Mudryk", c: "🤡 Troll" }, { n: "Romelu Lukaku (Lakaka)", c: "🤡 Troll" },
+        { n: "Nicolás Jackson", c: "🤡 Troll" }, { n: "Mariano Díaz", c: "🤡 Troll" },
+        { n: "André Onana", c: "🤡 Troll" }, { n: "Eden Hazard (Modo Burger)", c: "🤡 Troll" },
+        { n: "Chicharito Streamer", c: "🤡 Troll" }, { n: "Loris Karius", c: "🤡 Troll" }
+      ]
+    };
+
+    const CLUES = ["¿Activo?", "¿Europeo?", "¿Sudamericano?", "¿Delantero?", "¿Mediocampo?", "¿Defensa/Portero?", "¿Jugó en España?", "¿Jugó en Premier?", "¿Ganó Champions?", "¿Ganó Mundial?"];
+    let participants = [];
+    let currentSelfRevealed = null;
+
+    // Codificación URL-safe para que WhatsApp/Discord no rompan el enlace
+    function encodePayload(obj) {
+      const bytes = new TextEncoder().encode(JSON.stringify(obj));
+      let bin = "";
+      bytes.forEach(b => bin += String.fromCharCode(b));
+      return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    }
+
+    function decodePayload(str) {
+      let b64 = str.replace(/-/g, "+").replace(/_/g, "/");
+      while (b64.length % 4) b64 += "=";
+      const bin = atob(b64);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }
+
+    document.getElementById("playerInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") addParticipant();
+    });
+
+    function addParticipant() {
+      const input = document.getElementById("playerInput");
+      const raw = input.value.trim();
+      if (!raw) return;
+      raw.split(",").map(s => s.trim()).filter(Boolean).forEach(name => {
+        if (!participants.some(p => p.toLowerCase() === name.toLowerCase())) {
+          participants.push(name);
+        }
+      });
+      input.value = "";
+      renderParticipants();
+    }
+
+    function removeParticipant(idx) {
+      participants.splice(idx, 1);
+      renderParticipants();
+    }
+
+    function renderParticipants() {
+      const box = document.getElementById("participantsList");
+      box.innerHTML = participants.map((p, i) => `
+        <div class="chip">${escapeHtml(p)} <span class="del" onclick="removeParticipant(${i})">×</span></div>
+      `).join("");
+    }
+
+    function generateGame() {
+      if (participants.length < 2) {
+        alert("Añade al menos 2 participantes para repartir jugadores.");
+        return;
+      }
+      const checked = [...document.querySelectorAll(".packs input:checked")].map(el => el.value);
+      let pool = [];
+      checked.forEach(k => pool.push(...DB[k]));
+
+      const extra = document.getElementById("customPool").value.trim();
+      if (extra) {
+        extra.split(",").map(s => s.trim()).filter(Boolean).forEach(n => {
+          pool.push({ n, c: "Personalizado" });
+        });
+      }
+
+      if (pool.length < participants.length) {
+        alert("Selecciona más mazos: hay más amigos que futbolistas disponibles.");
+        return;
+      }
+
+      // Mezcla Fisher-Yates
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+
+      const assignments = participants.map((friend, idx) => ({
+        friend,
+        card: pool[idx]
+      }));
+
+      const baseUrl = window.location.href.split("#")[0];
+      const container = document.getElementById("linksContainer");
+      container.innerHTML = "";
+
+      assignments.forEach((target, idx) => {
+        const payload = {
+          me: target.friend,
+          selfCard: target.card, // Solo se usa si pulsa "Revelar mi jugador" al final
+          others: assignments.filter((_, i) => i !== idx)
+        };
+        const shareUrl = `${baseUrl}#p=${encodePayload(payload)}`;
+
+        const row = document.createElement("div");
+        row.className = "link-card";
+        row.innerHTML = `
+          <div>
+            <strong>👤 ${escapeHtml(target.friend)}</strong>
+            <div style="font-size: 0.78rem; color: var(--muted);">Jugador asignado oculto</div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="secondary" onclick="copyLink(this, '${shareUrl}')">Copiar link</button>
+            <button onclick="window.location.hash='p=${encodePayload(payload)}'; initFromHash();">Abrir</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      document.getElementById("linksPanel").classList.remove("hidden");
+    }
+
+    function copyLink(btn, url) {
+      navigator.clipboard.writeText(url).then(() => {
+        const old = btn.textContent;
+        btn.textContent = "✅ Copiado";
+        setTimeout(() => btn.textContent = old, 1800);
+      });
+    }
+
+    function initFromHash() {
+      const hash = window.location.hash;
+      if (!hash.startsWith("#p=")) {
+        document.getElementById("hostView").classList.remove("hidden");
+        document.getElementById("gameView").classList.add("hidden");
+        return;
+      }
+
+      try {
+        const data = decodePayload(hash.slice(3));
+        document.getElementById("hostView").classList.add("hidden");
+        document.getElementById("gameView").classList.remove("hidden");
+
+        document.getElementById("viewerBadge").textContent = `Estás jugando como: ${data.me}`;
+        currentSelfRevealed = data.selfCard;
+        document.getElementById("mySecretBox").textContent = "❓ TÚ (Adivina quién eres)";
+
+        const friendsBox = document.getElementById("friendsContainer");
+        friendsBox.innerHTML = data.others.map(o => `
+          <div class="friend-card">
+            <div>
+              <div class="friend-name">${escapeHtml(o.friend)} es:</div>
+              <div class="assigned-player">${escapeHtml(o.card.n)}</div>
+            </div>
+            <span class="tag-cat">${escapeHtml(o.card.c)}</span>
+          </div>
+        `).join("");
+
+        renderClues();
+      } catch (e) {
+        alert("El enlace está incompleto o dañado.");
+      }
+    }
+
+    function renderClues() {
+      const box = document.getElementById("clueTags");
+      box.innerHTML = CLUES.map(c => `<button type="button" class="clue-btn" onclick="cycleClue(this)">${c}</button>`).join("");
+    }
+
+    function cycleClue(btn) {
+      if (!btn.classList.contains("yes") && !btn.classList.contains("no")) {
+        btn.classList.add("yes");
+      } else if (btn.classList.contains("yes")) {
+        btn.classList.remove("yes");
+        btn.classList.add("no");
+      } else {
+        btn.classList.remove("no");
+      }
+    }
+
+    function revealSelf() {
+      if (!currentSelfRevealed) return;
+      if (confirm("¿Seguro que quieres revelar tu jugador? Solo hazlo si ya adivinaste o terminó la ronda.")) {
+        document.getElementById("mySecretBox").textContent = `⚽ Eras: ${currentSelfRevealed.n} (${currentSelfRevealed.c})`;
+      }
+    }
+
+    function newLobby() {
+      history.pushState("", document.title, window.location.pathname + window.location.search);
+      initFromHash();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+    }
+
+    window.addEventListener("hashchange", initFromHash);
+    initFromHash();
+  </script>
+</body>
+  </html>
+  
